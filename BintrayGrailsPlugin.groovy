@@ -8,7 +8,7 @@ class BintrayGrailsPlugin {
     def organization = [name: "University of Pennsylvania Libraries", url: "https://github.com/upenn-libraries"]
     def developers = [[name: "Tommy Barker", email: "mingus.karate@gmail.com"]]
     def issueManagement = [system: "GitHub", url: "https://github" +
-            ".com/upenn-libraries/grails-squeaky-clean-plugin/issues"]
+            ".com/upenn-libraries/grails-bintray-plugin/issues"]
     def documentation = "https://github.com/upenn-libraries/grails-bintray-plugin"
     def scm = [url: "https://github.com/upenn-libraries/grails-bintray-plugin"]
     def license = "ECL2"
