@@ -12,6 +12,8 @@
 /*.tmproj
 /ivy*
 /eclipse
+/*.iml
+/.idea
 
 # default HSQL database files for production mode
 /prodDb.*
@@ -30,6 +32,7 @@
 
 # plugin release file
 /*.zip
+/plugin.xml
 
 # older plugin install locations
 /plugins

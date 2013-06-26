@@ -1,0 +1,1 @@
+grails.plugins.squeakyclean.cleandirs = true
