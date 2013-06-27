@@ -5,13 +5,15 @@ includeTargets << new File("${releasePluginDir}/scripts/_GrailsMaven.groovy")
 String bintrayOrg
 String bintrayRepo
 String bintrayPackage
+String version
+String repoName
 boolean artifactAlreadyExistsOrIsSnapshot = false
 
 target(uploadToBintray: "uploads artifacts to bintray if conditions are met") {
     //noinspection GroovyAssignabilityCheck
     depends(checkConditions)
     if (!artifactAlreadyExistsOrIsSnapshot) {
-        depends(mavenDeploy)
+        depends(mavenDeploy, publishBintrayArtifacts)
     }
 }
 
@@ -21,7 +23,7 @@ target(checkConditions: "check whether or not we can upload an artifact to bintr
 
 target(checkAndSetBintrayArgs: "makes sure the repo url is in fact a bintray url") {
     depends(init) //from the maven plugin
-    def repoName = argsMap.repository ?: grailsSettings.config.grails.project.repos.default
+    repoName = argsMap.repository ?: grailsSettings.config.grails.project.repos.default
     def repo = repoName ? distributionInfo.remoteRepos[repoName] : null
     if (!repo) {
         grailsConsole.error "No repository has been set"
@@ -51,7 +53,6 @@ target(checkAndSetBintrayArgs: "makes sure the repo url is in fact a bintray url
 target(checkProjectVersion: "check if the package was already deployed") {
     depends(checkAndSetBintrayArgs)
 
-    def version
     if (isPluginProject) {
         if (!pluginSettings.basePluginDescriptor.filename) {
             grailsConsole.error "PluginDescripter not found to get version"
@@ -86,7 +87,6 @@ target(checkProjectVersion: "check if the package was already deployed") {
     }
 
     if (!artifactAlreadyExistsOrIsSnapshot) {
-        def restBuilder = classLoader.loadClass("grails.plugins.rest.client.RestBuilder").newInstance()
         def json = new URL("https://api.bintray.com/packages/$bintrayOrg/$bintrayRepo/$bintrayPackage").text
         def slurper = new JsonSlurper()
         def versions = slurper.parseText(json).versions
@@ -99,7 +99,6 @@ target(checkProjectVersion: "check if the package was already deployed") {
 }
 
 target(checkJavaVersion: "checks the java version") {
-    boolean conditionsMet = true
     String javaVersion = System.getProperty("java.version")
     def m = javaVersion =~ /^1\.(\d+)/
     m.lookingAt()
@@ -110,8 +109,26 @@ target(checkJavaVersion: "checks the java version") {
     }
 }
 
-target(publishToBintray: "publishes to bintray") {
+target(publishBintrayArtifacts: "publishes bintray artifacts") {
+    def restClient = classLoader.loadClass("grails.plugins.rest.client.RestBuilder").newInstance()
+    def projectConfig = grailsSettings.config.grails.project
+    def username = projectConfig.repos."${repoName}".username
+    def password = projectConfig.repos."${repoName}".password
 
+    def url = "https://api.bintray" +
+            ".com/content/$bintrayOrg/$bintrayRepo/$bintrayPackage/$version/publish"
+    grailsConsole.info "publishing artifacts with POST to $url"
+
+    def response = restClient.post(url) {
+        auth username, password
+    }
+
+    if (response.getClass().getSimpleName() == "ErrorResponse") {
+        grailsConsole.error "response returned with error status $response.status and body:\n $response.text"
+        exit 7
+    }
+
+    grailsConsole.info "artifacts uploaded and published"
 }
 
 setDefaultTarget(uploadToBintray)
