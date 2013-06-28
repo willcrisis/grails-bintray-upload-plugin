@@ -16,11 +16,13 @@ Plugin will most likely be used during the build phase
 //BuildConfig.groovy
 
 plugins {
-    build(":bintray:<version>") {
+    build(":bintray:<version>", ":release:2.2.1") {
       export = false
     }
 }
 ```
+
+The release plugin must be installed as well
 
 Usage
 -----
