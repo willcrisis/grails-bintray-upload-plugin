@@ -3,7 +3,7 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
-grails.project.repos.bintray.url = "https://api.bintray.com/maven/upennlib/test/bintray"
+grails.project.repos.bintray.url = "https://api.bintray.com/maven/upennlib/test/bintray-upload"
 
 grails.project.dependency.resolution = {
     inherits("global")
