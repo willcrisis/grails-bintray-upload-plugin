@@ -27,7 +27,7 @@ The release plugin must be installed as well
 Usage
 -----
 Configure everything as you would with the release plugin, but instead of calling `maven-deploy` or `publish-plugin`,
-call `upload-to-bintray`.  When conditions are not met, script exits with or without errors based on accommodating 
+call `upload-to-bintray`.  When conditions are not met, script exits with or without errors to accommodate 
 continuous integration.
 If the application is a SNAPSHOT, or has already been deployed, the script will exit silently indicating why it skipped
 uploading to bintray.  If the wrong 
