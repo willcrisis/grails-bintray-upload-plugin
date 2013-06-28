@@ -1,5 +1,5 @@
-grails-bintray-plugin
-=====================
+grails-bintray-upload-plugin
+============================
 
 uses the release plugin to upload to bintray provided certain conditions are met:
 
