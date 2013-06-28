@@ -16,7 +16,7 @@ Plugin will most likely be used during the build phase
 //BuildConfig.groovy
 
 plugins {
-    build(":bintray:<version>", ":release:2.2.1") {
+    build(":bintray-upload:<version>", ":release:2.2.1") {
       export = false
     }
 }
