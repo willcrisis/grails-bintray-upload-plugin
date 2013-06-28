@@ -31,4 +31,5 @@ call `upload-to-bintray`.  When conditions are not met, script exits with or wit
 continuous integration.
 If the application is a SNAPSHOT, or has already been deployed, the script will exit silently indicating why it skipped
 uploading to bintray.  If the wrong 
-version of java is being used or the bintray repo url is not correct, an error will occurr.
+version of java is being used or the bintray repo url is not correct, an error will occurr.  Once the artifacts have been 
+uploaded to bintray, the artifacts will also be published.
