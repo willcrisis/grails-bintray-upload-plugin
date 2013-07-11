@@ -7,18 +7,39 @@ String bintrayRepo
 String bintrayPackage
 String version
 String repoName
+boolean conditionsMet = true
+boolean failOnBadCondition = true
 boolean artifactAlreadyExistsOrIsSnapshot = false
 
 target(uploadToBintray: "uploads artifacts to bintray if conditions are met") {
     //noinspection GroovyAssignabilityCheck
-    depends(checkConditions)
-    if (!artifactAlreadyExistsOrIsSnapshot) {
+    depends(parseArguments, checkConditions)
+    failOnBadCondition = Boolean.valueOf(argsMap.failOnBadCondition ?: true)
+
+    if(!conditionsMet && failOnBadCondition) {
+        grailsConsole.error "One or more conditions have not been met"
+        exit(8)
+    }
+
+    if(!conditionsMet && !failOnBadCondition) {
+        grailsConsole.warn "One or more conditions were not met"
+    }
+
+    if (conditionsMet) {
         depends(mavenDeploy, publishBintrayArtifacts)
     }
 }
 
 target(checkConditions: "check whether or not we can upload an artifact to bintray") {
-    depends(checkJavaVersion, checkAndSetBintrayArgs, checkProjectVersion)
+    depends(checkJavaVersion)
+
+    if(conditionsMet) {
+        depends(checkAndSetBintrayArgs)
+    }
+
+    if(conditionsMet) {
+        depends(checkProjectVersion)
+    }
 }
 
 target(checkAndSetBintrayArgs: "makes sure the repo url is in fact a bintray url") {
@@ -83,7 +104,7 @@ target(checkProjectVersion: "check if the package was already deployed") {
 
     if (version.endsWith("SNAPSHOT")) {
         grailsConsole.info "you cannot deploy SNAPSHOTs to bintray, skipping upload"
-        artifactAlreadyExistsOrIsSnapshot = true
+        conditionsMet = false
     }
 
     if (!artifactAlreadyExistsOrIsSnapshot) {
@@ -93,7 +114,8 @@ target(checkProjectVersion: "check if the package was already deployed") {
         artifactAlreadyExistsOrIsSnapshot = versions.contains(version)
 
         if (artifactAlreadyExistsOrIsSnapshot) {
-            grailsConsole.info "version $version has already been deployed to bintray, skipping upload to bintray"
+            grailsConsole.info "version $version has already been deployed to bintray"
+            conditionsMet = false
         }
     }
 }
@@ -104,8 +126,8 @@ target(checkJavaVersion: "checks the java version") {
     m.lookingAt()
     int majorVersion = m.group(1).toInteger()
     if (majorVersion < 7) {
-        grailsConsole.error "you can't upload to bintray unless you are using at least java 7"
-        exit(1)
+        grailsConsole.warn "you can't upload to bintray unless you are using at least java 7"
+        conditionsMet = false
     }
 }
 
