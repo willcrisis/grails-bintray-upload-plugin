@@ -3,10 +3,10 @@ grails-bintray-upload-plugin
 
 uses the release plugin to upload to bintray provided certain conditions are met:
 
-* Using java 7 (you cannot upload to bintray with 6 or below due to a java bug), exits as error if condition not met
-* Not a SNAPSHOT (bintray does not support SNAPSHOTs), exits with no error if condition not met
-* Doesn't already exist, exits with no error if condition not met
-* Bintray url is in the correct form, exits with error if condition not met
+* Using java 7 (you cannot upload to bintray with 6 or below due to a java bug)
+* Not a SNAPSHOT (bintray does not support SNAPSHOTs)
+* Doesn't already exist
+* Bintray url is in the correct form, exits with error if condition not met regardless of `-failOnConditionMet` value
 
 Install
 -------
@@ -27,9 +27,5 @@ The release plugin must be installed as well
 Usage
 -----
 Configure everything as you would with the release plugin, but instead of calling `maven-deploy` or `publish-plugin`,
-call `upload-to-bintray`.  When conditions are not met, script exits with or without errors to accommodate 
-continuous integration.
-If the application is a SNAPSHOT, or has already been deployed, the script will exit silently indicating why it skipped
-uploading to bintray.  If the wrong 
-version of java is being used or the bintray repo url is not correct, an error will occurr.  Once the artifacts have been 
-uploaded to bintray, the artifacts will also be published.
+call `upload-to-bintray`.  By default, if conditions are not met, the script throws an exception.  You change the 
+flag `-failOnBadCondition` to `true` to have it just log the conditions that were not met.
