@@ -27,5 +27,5 @@ The release plugin must be installed as well
 Usage
 -----
 Configure everything as you would with the release plugin, but instead of calling `maven-deploy` or `publish-plugin`,
-call `upload-to-bintray`.  By default, if conditions are not met, the script throws an exception.  You change the 
-flag `-failOnBadCondition` to `true` to have it just log the conditions that were not met.
+call `upload-to-bintray`.  By default, if conditions are not met, the script throws an exception.  You can change the 
+flag `-failOnBadCondition` to `true` to have it just log the conditions that were not met and not exit with an error.
