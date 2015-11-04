@@ -34,7 +34,7 @@ call `upload-to-bintray`.  By default, if conditions are not met, the script thr
 flag `-failOnBadCondition` to `true` to have it just log the conditions that were not met and not exit with an error.
 
 The following properties MUST BE set in your `BuildConfig.groovy` or `settings.groovy`:
-* grails.project.repos.bintray.url = "https://api.bintray.com/maven/<your-username>/<your-repo>/<your-package>"
-* grails.project.repos.bintray.username = "<your-username>"
-* grails.project.repos.bintray.password = "<your API key>"
+* grails.project.repos.bintray.url = "https://api.bintray.com/maven/your-username/your-repo/your-package"
+* grails.project.repos.bintray.username = "your-username"
+* grails.project.repos.bintray.password = "your API key"
 * grails.project.repos.default = "bintray" //to enable bintray repo as default
