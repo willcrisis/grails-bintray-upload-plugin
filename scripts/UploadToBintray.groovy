@@ -1,4 +1,5 @@
 import groovy.json.JsonSlurper
+import org.codehaus.groovy.grails.web.json.JSONObject
 
 includeTargets << new File("${releasePluginDir}/scripts/_GrailsMaven.groovy")
 
@@ -143,6 +144,7 @@ target(publishBintrayArtifacts: "publishes bintray artifacts") {
 
     def response = restClient.post(url) {
         auth username, password
+        accept JSONObject, 'application/json'
     }
 
     if (response.getClass().getSimpleName() == "ErrorResponse") {
